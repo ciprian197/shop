@@ -5,6 +5,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 
 import static junit.framework.TestCase.assertEquals;
@@ -58,6 +59,22 @@ public class StoreRepositoryTest {
 
         // Then
         assertEquals(result,"code q");
+    }
+
+    @Test
+    public void getProductsCategory_productCodeUsed_error()throws IOException{
+        // Given
+        Product product = new Product(1,"milk","food",20);
+        Product newProduct = new Product(2,"juice","fsss",20);
+
+        storeRepository.addNewProduct(product);
+        storeRepository.addNewProduct(newProduct);
+
+
+        List<Product> result = storeRepository.getProductsCategory("food");
+
+        // Then
+        assertEquals(result.get(0),product);
     }
 
 }
