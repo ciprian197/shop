@@ -1,6 +1,7 @@
 package com.vvss.shop.repository;
 
 import com.vvss.shop.model.Product;
+import com.vvss.shop.repository.StoreRepository;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -43,6 +44,7 @@ public class StoreRepositoryTest {
     public void addProduct_quantityIsLessThan0_error() throws IOException {
         // Given
         final Product product = new Product(1, "milk", "food", -20);
+
         // When
         final String result = storeRepository.addNewProduct(product);
 
@@ -54,6 +56,7 @@ public class StoreRepositoryTest {
     public void addProduct_codeIsLessThan0_error() throws IOException {
         // Given
         final Product product = new Product(-1, "milk", "food", 20);
+
         // When
         final String result = storeRepository.addNewProduct(product);
 
@@ -70,7 +73,7 @@ public class StoreRepositoryTest {
         storeRepository.addNewProduct(product);
         storeRepository.addNewProduct(newProduct);
 
-
+        // When
         final List<Product> result = storeRepository.getProductsCategory("food");
 
         // Then
@@ -86,6 +89,7 @@ public class StoreRepositoryTest {
         storeRepository.addNewProduct(product);
         storeRepository.addNewProduct(newProduct);
 
+        // When
         final List<Product> result = storeRepository.getProductsCategory("food");
 
         // Then
@@ -101,11 +105,22 @@ public class StoreRepositoryTest {
         storeRepository.addNewProduct(product);
         storeRepository.addNewProduct(newProduct);
 
+        // When
         final List<Product> result = storeRepository.getProductsCategory("liquid");
 
         // Then
         assertTrue(result.contains(product));
         assertTrue(result.contains(newProduct));
+    }
+
+    @Test
+    public void getProductsCategory_noProducts_emptyList() throws IOException {
+        // Given
+        // When
+        final List<Product> result = storeRepository.getProductsCategory("liquid");
+
+        // Then
+        assertTrue(result.isEmpty());
     }
 
 }
