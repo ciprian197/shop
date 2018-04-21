@@ -5,7 +5,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.List;
 
 import static junit.framework.TestCase.assertEquals;
@@ -16,65 +15,97 @@ public class StoreRepositoryTest {
     private StoreRepository storeRepository;
 
     @Before
-    public void setUp(){
+    public void setUp() {
         storeRepository = new StoreRepository();
     }
 
     @Test
-    public void stockSituation_ok_emptyList(){
-        List<Product> result = this.storeRepository.stockSituation();
+    public void stockSituation_ok_emptyList() {
+        final List<Product> result = this.storeRepository.stockSituation();
         assertTrue(result.isEmpty());
     }
 
     @Test
-    public void addProduct_productCodeUsed_error()throws IOException{
+    public void addProduct_productCodeUsed_error() throws IOException {
         // Given
-        Product product = new Product(1,"milk","food",20);
+        final Product product = new Product(1, "milk", "food", 20);
         storeRepository.addNewProduct(product);
-        Product newProduct = new Product(1,"milk","food",20);
+        final Product newProduct = new Product(1, "milk", "food", 20);
 
         // When
-        String result = storeRepository.addNewProduct(newProduct);
+        final String result = storeRepository.addNewProduct(newProduct);
 
         // Then
-        assertEquals(result,"This code already exists");
+        assertEquals(result, "This code already exists");
     }
 
     @Test
-    public void addProduct_quantityIsLessThan0_error()throws IOException{
+    public void addProduct_quantityIsLessThan0_error() throws IOException {
         // Given
-        Product product = new Product(1,"milk","food",-20);
+        final Product product = new Product(1, "milk", "food", -20);
         // When
-        String result = storeRepository.addNewProduct(product);
+        final String result = storeRepository.addNewProduct(product);
 
         // Then
-        assertEquals(result,"code q");
-    }
-    @Test
-    public void addProduct_codeIsLessThan0_error()throws IOException{
-        // Given
-        Product product = new Product(-1,"milk","food",20);
-        // When
-        String result = storeRepository.addNewProduct(product);
-
-        // Then
-        assertEquals(result,"code q");
+        assertEquals(result, "code q");
     }
 
     @Test
-    public void getProductsCategory_productCodeUsed_error()throws IOException{
+    public void addProduct_codeIsLessThan0_error() throws IOException {
         // Given
-        Product product = new Product(1,"milk","food",20);
-        Product newProduct = new Product(2,"juice","fsss",20);
+        final Product product = new Product(-1, "milk", "food", 20);
+        // When
+        final String result = storeRepository.addNewProduct(product);
+
+        // Then
+        assertEquals(result, "code q");
+    }
+
+    @Test
+    public void getProductsCategory_oneProductWIthSpecifiedCategory_product() throws IOException {
+        // Given
+        final Product product = new Product(1, "milk", "food", 20);
+        final Product newProduct = new Product(2, "juice", "fsss", 20);
 
         storeRepository.addNewProduct(product);
         storeRepository.addNewProduct(newProduct);
 
 
-        List<Product> result = storeRepository.getProductsCategory("food");
+        final List<Product> result = storeRepository.getProductsCategory("food");
 
         // Then
-        assertEquals(result.get(0),product);
+        assertEquals(result.get(0), product);
+    }
+
+    @Test
+    public void getProductsCategory_noProductWithProductCategory_emptyList() throws IOException {
+        // Given
+        final Product product = new Product(1, "milk", "liquid", 20);
+        final Product newProduct = new Product(2, "juice", "fsss", 20);
+
+        storeRepository.addNewProduct(product);
+        storeRepository.addNewProduct(newProduct);
+
+        final List<Product> result = storeRepository.getProductsCategory("food");
+
+        // Then
+        assertTrue(result.isEmpty());
+    }
+
+    @Test
+    public void getProductsCategory_allProductsFromGivenCategory_completeList() throws IOException {
+        // Given
+        final Product product = new Product(1, "milk", "liquid", 20);
+        final Product newProduct = new Product(2, "juice", "liquid", 20);
+
+        storeRepository.addNewProduct(product);
+        storeRepository.addNewProduct(newProduct);
+
+        final List<Product> result = storeRepository.getProductsCategory("liquid");
+
+        // Then
+        assertTrue(result.contains(product));
+        assertTrue(result.contains(newProduct));
     }
 
 }
